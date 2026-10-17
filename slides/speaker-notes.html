@@ -1,0 +1,32 @@
+<!DOCTYPE html><html><head><meta charset="utf-8">
+<style>
+@page { size: A4; margin: 1.8cm; }
+body { font-family: "Ubuntu", "Noto Sans Thai Looped", sans-serif; font-size: 10.5pt; color: #0f172a; }
+h1 { font-size: 17pt; border-bottom: 2.5pt solid #0d9488; padding-bottom: 4pt; }
+.meta { color: #64748b; font-size: 9pt; margin-bottom: 14pt; }
+.slide { margin-bottom: 12pt; page-break-inside: avoid; }
+.num { display: inline-block; background: #0d9488; color: white; font-weight: bold;
+       padding: 1pt 7pt; border-radius: 4pt; font-size: 9.5pt; }
+.title { font-weight: bold; font-size: 11.5pt; margin-left: 5pt; }
+.notes { margin: 3pt 0 0 30pt; color: #334155; line-height: 1.45; }
+</style></head><body>
+<h1>Speaker Notes — Explore Functional Programming in Go</h1>
+<div class="meta">เวิร์กชอป 2 ชม. · 16 สไลด์ · ตัวเลขใน [วงเล็บ] = นาทีบน timeline (0:00–2:00) · เด็ค: ~/src/go-fp/slides/fp-in-go-workshop.pptx</div>
+
+<div class="slide"><span class="num">1</span><span class="title">Explore Functional Programming in Go</span><div class="notes">[0:00] เปิดด้วยคำถาม: เคยแก้ bug ที่โค้ด &#x27;รันครั้งที่สองผลไม่เหมือนครั้งแรก&#x27; ไหม? — นั่นคือ action ที่หลุดมาปน calculation ทั้งงานไม่พูด monad/functor เลย (ใครถามเรื่อง Haskell/monad เลื่อนไปตอบท้ายชั่วโมง)</div></div>
+<div class="slide"><span class="num">2</span><span class="title">จบ 2 ชั่วโมงนี้ คุณจะได้</span><div class="notes">[0:02] ย้ำสัญญา: ออกจากห้องไปด้วยทักษะ ไม่ใช่ความรู้ลอย ๆ — เล่า flow วันนี้สั้น ๆ: ดูโค้ด เขียนโค้ด แล้วมีการบ้านไปต่อที่บ้าน (เวลาเริ่มเบี้ยว: middleware เป็นตัวตัดก่อน)</div></div>
+<div class="slide"><span class="num">3</span><span class="title">แกนคิดของวันนี้: ทุกบรรทัดโค้ดคือ 1 ใน 3 อย่างนี้</span><div class="notes">[0:05] ให้ผู้เรียนยกตัวอย่าง action/calculation จากงานตัวเองคนละ 1 อย่าง (30 วินาที) — ประเด็น: calculation มักแฝง &#x27;ในหัว&#x27; เช่น กติกาส่วนลดที่อยู่ใน if ของ handler ใหญ่ ๆ จนไม่มีใครเห็นว่ามันคือ calculation แยกอยู่</div></div>
+<div class="slide"><span class="num">4</span><span class="title">ลองอ่านโค้ดนี้</span><div class="notes">[0:08] อย่าเฉลยเร็ว — จับคู่ชี้บรรทัด 3 นาที แล้วเฉลยบนกระดาน จุดที่ติง: order.Total ถูก mutate (action บน data), กติกา 1000→90% คือ calculation ที่ฝังอยู่, time.Now/print/save คือ action ชัด ๆ คำถามขวาคือสะพานไปหน้าถัดไป</div></div>
+<div class="slide"><span class="num">5</span><span class="title">โค้ดที่ปนกันทำให้ชีวิตยาก</span><div class="notes">[0:13] อย่าเพิ่งโชว์วิธีแก้ — ให้เห็นปัญหาก่อน ถามว่าใครเคยเจอ bug &#x27;ผ่านข้อมูลเข้าไปแล้วมันเปลี่ยน&#x27; (mutate input) แล้วสะพานไปหน้า refactor</div></div>
+<div class="slide"><span class="num">6</span><span class="title">จาก Action สู่ Calculation</span><div class="notes">[0:15] พิมพ์สดหรือสลับหน้าจอ go-fp/02 จุดสำคัญคือ &#x27;ย้ายไปขอบ&#x27; — FP ไม่ได้แปลว่ากำจัด side effect แต่จัดที่อยู่ให้มัน ถามต่อ: LogDiscount ยังเทสต์ยากไหม? → ยาก แต่เล็กและไม่มีความรู้ธุรกิจอยู่ข้างในแล้ว</div></div>
+<div class="slide"><span class="num">7</span><span class="title">ผลลัพธ์: ทดสอบได้โดยไม่ต้อง mock อะไรเลย</span><div class="notes">[0:25] รันเทสต์ให้เห็นเขียว ตาราง 3 แถวนี้คือ spec ของกติกาส่วนลด — QA/PM อ่านออกด้วย นี่คือเหตุผลที่ calculation คู่ควรกับการถูกแยกออกมา</div></div>
+<div class="slide"><span class="num">8</span><span class="title">เครื่องมือ 1: ฟังก์ชันเป็นค่า (Higher-order Functions + Closures)</span><div class="notes">[0:40] ให้ผู้เรียนเดาลายเซ็น Curry2 ก่อนเฉลย (โค้ดเต็ม + เทสต์: go-fp/04) ใครถาม &#x27;ทำไม Go ไม่มี lambda สั้น ๆ&#x27; → ตอบตรง ๆ ว่า verbose by design และ (value, error) ทำ chain ยาก</div></div>
+<div class="slide"><span class="num">9</span><span class="title">กับดักของ closure: loop variable</span><div class="notes">[0:50] ถ้ามีเวลา รันสดเทียบ Go เก่า/ใหม่ (gotip) เชื่อมกลับกรอบ ACD: goroutine คือ action, ตัวแปรที่ถูกจับร่วมคือ data ที่แชร์โดยไม่ตั้งใจ</div></div>
+<div class="slide"><span class="num">10</span><span class="title">เครื่องมือ 2: Generics — เขียน Map / Filter / Reduce เองได้</span><div class="notes">[0:52] แนะให้เปิด fp_test.go เป็นตัวอย่าง TDD — เขียนเทสต์ก่อนแล้วเห็นลายเซ็น generic ทีละขั้น ใครถาม performance: for loop ตรง ๆ ชนะเสมอ ไม่มี magic</div></div>
+<div class="slide"><span class="num">11</span><span class="title">Functional Options — pattern ที่คุณใช้อยู่แล้ว</span><div class="notes">[1:05] aha moment ของวัน: คนที่ใช้ zap.New(...WithFields) มาตลอดจะเห็นว่ามันคือ pattern เดียวกับ Adder/Curry2 เพิ่งเรียน — เดินหน้านี้สั้น ๆ แล้วไป middleware</div></div>
+<div class="slide"><span class="num">12</span><span class="title">Middleware = Function Composition</span><div class="notes">[1:10] ถ้าเวลาเหลือน้อย ตัดหน้านี้ทั้งหน้าได้ (พูดประโยคเดียว: &#x27;middleware คือการเอาฟังก์ชันมาคู่กัน ลำดับมีความหมาย&#x27;) แล้วกระโดดไปของหวาน — ไม่กระทบเรื่องเล่า</div></div>
+<div class="slide"><span class="num">13</span><span class="title">ของหวาน: Lazy Sequence ด้วย iter.Seq (Go 1.23+)</span><div class="notes">[1:25] โชว์อย่างเดียว ไม่ลงลึก: yield คืน false = ผู้อ่านสั่งหยุด ทำให้ infinite sequence ปลอดภัย แถมขำ: int ยัง overflow ถ้าดันอ่านไกล — ของจริงไม่มีอะไร infinite หน้านี้ตัดได้ถ้าเวลาโดนตัด แต่เป็นของที่คนจำได้นาน พยายามรักษาไว้</div></div>
+<div class="slide"><span class="num">14</span><span class="title">สรุป: 3 คำถามกับโค้ดทุกบรรทัด</span><div class="notes">[1:40] ปิดเนื้อหาด้วยกรอบเดียว: 3 คำถามนี้คือสิ่งที่อยากให้จำกลับบ้าน — การบ้านคือโอกาสฝึกใช้มันหน้าเดียว</div></div>
+<div class="slide"><span class="num">15</span><span class="title">การบ้าน: แยกคูปองออกจากการส่งอีเมล</span><div class="notes">[1:48] มอบการบ้าน: ใช้เวลา ~20 นาที ใบ้จุดพลาดบ่อยไว้ด้วย — (1) ลืมรักษาลำดับคูปองเดิม (2) return slice ใหม่แต่ mutate element ข้างใน (ยังไม่ pure) (3) แอบเอาการหา coupon กลับเข้าไปใน action ครั้งหน้าเปิดเฉลยพร้อมกัน</div></div>
+<div class="slide"><span class="num">16</span><span class="title">อ่านต่อ</span><div class="notes">เผื่อ Q&amp;A: (1) ทำไม Go ไม่มี pipe operator → verbose by design + (value, error) ทำ chain ยาก (2) copy-on-write แพงไหม → benchmark ใน go-fp/08: struct เล็กต่างกัน ~0.05 ns/op (3) goroutine/channel เข้ากรอบไหน → channel คือ data, การส่ง/รับคือ action (4) ใครถาม monad → วันนี้ไม่จำเป็น แนะนำหนังสือต่อ</div></div>
+</body></html>
