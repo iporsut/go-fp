@@ -386,9 +386,9 @@ bullets(s, [
     {"t": "วิธีดึง calculation ออกจาก action ให้โค้ดทดสอบง่ายขึ้น — ใช้กับ legacy Go ได้ทันที", "level": 0, "size": 19, "space": 14},
     {"t": "เครื่องมือของ Go สำหรับเขียนแบบ functional: closures, generics, iter.Seq", "level": 0, "size": 19, "space": 14},
     {"t": "สายตาใหม่กับ pattern ที่คุณใช้อยู่แล้ว (Functional Options, middleware) — ที่จริงมันคือ FP", "level": 0, "size": 19, "space": 14},
-    {"t": "และได้ลงมือ refactor โค้ดจริงด้วยมือตัวเอง 1 ชิ้น ในชั่วโมงสุดท้าย", "level": 0, "size": 19, "space": 14, "bold": True, "color": ACCENT},
+    {"t": "และมีการบ้าน 1 ชิ้น ให้ได้ลอง refactor ด้วยมือตัวเองต่อที่บ้าน", "level": 0, "size": 19, "space": 14, "bold": True, "color": ACCENT},
 ], y=1.75)
-notes(s, "[0:02] ย้ำสัญญา: ออกจากห้องไปด้วยทักษะ ไม่ใช่ความรู้ลอย ๆ — เล่า flow วันนี้สั้น ๆ: ครึ่งแรกดูโค้ด ครึ่งหลังลงมือทำ (เวลาเริ่มเบี้ยว: middleware เป็นตัวตัดก่อน)")
+notes(s, "[0:02] ย้ำสัญญา: ออกจากห้องไปด้วยทักษะ ไม่ใช่ความรู้ลอย ๆ — เล่า flow วันนี้สั้น ๆ: ดูโค้ด เขียนโค้ด แล้วมีการบ้านไปต่อที่บ้าน (เวลาเริ่มเบี้ยว: middleware เป็นตัวตัดก่อน)")
 
 # 3 ACD concept
 s = slide()
@@ -500,46 +500,17 @@ title_bar(s, "Middleware = Function Composition",
           sub="http.Handler เป็น function เดียว → wrapper ครอบซ้อนกันคือ composition แบบ Go")
 code_box(s, CODE_MIDDLEWARE, 0.6, 2.05, 12.15, 4.0, size=12)
 takeaway(s, "ลำดับของ Chain(Logger, Recover) มีความหมาย — composition คือ 'ลำดับ = ความหมาย'")
-notes(s, "[1:10] ถ้าเวลาเหลือน้อยกว่า 15 นาที ณ จุดนี้ ตัดหน้านี้ทั้งหน้าได้ (พูดประโยคเดียว: 'middleware คือการเอาฟังก์ชันมาคู่กัน ลำดับมีความหมาย') แล้วกระโดดไป workshop — ไม่กระทบเรื่องเล่า")
+notes(s, "[1:10] ถ้าเวลาเหลือน้อย ตัดหน้านี้ทั้งหน้าได้ (พูดประโยคเดียว: 'middleware คือการเอาฟังก์ชันมาคู่กัน ลำดับมีความหมาย') แล้วกระโดดไปของหวาน — ไม่กระทบเรื่องเล่า")
 
-# 13 workshop
-s = slide()
-title_bar(s, "Workshop: แยกคูปองออกจากการส่งอีเมล",
-          sub="โจทย์จาก Grokking Simplicity บท 3–5 พอร์ตเป็น Go — repo: go-fp/07-coupon-email-exercise")
-code_box(s, CODE_COUPON, 0.6, 2.05, 6.6, 4.5, size=12, label="starter/coupons.go", label_color=BAD)
-tb, tf = textbox(s, 7.5, 2.1, 5.3, 4.5)
-put(tf, "โจทย์ของคุณ", size=18, bold=True, color=ACCENT, first=True, space_after=6)
-for i, t in enumerate([
-    "แยก A/C/D ให้ครบ (3 น.)",
-    "ดึง FindApplicableCoupons ออกมา — เขียน table-driven test ก่อน implementation (10 น.)",
-    "เหลือ SendCouponEmail เป็น action บาง ๆ (5 น.)",
-    "เทียบกับ solution/ (2 น.)",
-]):
-    put(tf, f"{i+1}. {t}", size=15, space_after=8)
-put(tf, "กติกาโจทย์: เงินเป็นบาทเต็มไม่ติดลบ · coupon ไม่มีหมวด = ใช้ได้ทุกหมวด · รักษาลำดับเดิม", size=13, color=MUTED, italic=True)
-notes(s, "[1:25] เดินดูรอบห้อง จุดพลาดบ่อย: (1) ลืมรักษาลำดับคูปองเดิม (2) return slice ใหม่แต่ mutate element ข้างใน — ถามกลับว่า pure จริงไหม (3) แอบเอาการหา coupon ใส่ action อีกที ผู้เรียนเปิด EXERCISE.md ตามได้")
-
-# 14 เฉลย
-s = slide()
-title_bar(s, "เฉลย: calculation ที่ pure เต็มตัว + action ที่บางที่สุด")
-code_box(s, CODE_COUPON_SOL, 0.6, 1.85, 7.8, 4.4, size=13, label="solution/", label_color=GOOD)
-tb, tf = textbox(s, 8.75, 2.0, 4.0, 4.2)
-put(tf, "สังเกต", size=18, bold=True, color=ACCENT, first=True, space_after=8)
-for t in ["กติกาธุรกิจทั้งหมดอยู่ใน calculation เดียว เทสต์ได้โดยไม่แตะ I/O",
-          "SendCouponEmail รู้จักแค่การ 'ส่ง' — ไม่รู้ว่าคูปองมายังไง",
-          "ลำดับการเรียก (หาก่อน → ส่งทีหลัง) เป็นของผู้เรียก ไม่ใช่ของฟังก์ชัน"]:
-    put(tf, "• " + t, size=15, space_after=10)
-notes(s, "[1:43] เฉลยสั้น ๆ จุดเน้น: action บาง = แค่ 'จุดที่โลกเปลี่ยน' ไม่มีความรู้ธุรกิจเลย ใน solution ตั้งใจไม่เขียนเทสต์ให้ action เพื่อโชว์ขอบเขต")
-
-# 15 iter
+# 13 iter
 s = slide()
 title_bar(s, "ของหวาน: Lazy Sequence ด้วย iter.Seq (Go 1.23+)",
           sub="อนุกรมไม่รู้จบที่คำนวณเท่าที่ถูกขอ — range-over-func ในภาษา Go เอง")
 code_box(s, CODE_ITER, 0.6, 1.85, 12.15, 4.35, size=13)
 takeaway(s, "Fibonacci ไม่มีจุดจบ แต่ Take(10) คำนวณแค่ 10 ตัว — lazy คือคำนวณ 'เท่าที่จำเป็น' ไม่ใช่ 'ทั้งหมดก่อนแล้วค่อยตัด'")
-notes(s, "[1:45] โชว์อย่างเดียว ไม่ลงลึก: yield คืน false = ผู้อ่านสั่งหยุด ทำให้ infinite sequence ปลอดภัย แถมขำ: int ยัง overflow ถ้าดันอ่านไกล — ของจริงไม่มีอะไร infinite หน้านี้ตัดได้ถ้าเวลาโดนตัด แต่เป็นของที่คนจำได้นาน พยายามรักษาไว้")
+notes(s, "[1:25] โชว์อย่างเดียว ไม่ลงลึก: yield คืน false = ผู้อ่านสั่งหยุด ทำให้ infinite sequence ปลอดภัย แถมขำ: int ยัง overflow ถ้าดันอ่านไกล — ของจริงไม่มีอะไร infinite หน้านี้ตัดได้ถ้าเวลาโดนตัด แต่เป็นของที่คนจำได้นาน พยายามรักษาไว้")
 
-# 16 สรุป
+# 14 สรุป
 s = slide()
 title_bar(s, "สรุป: 3 คำถามกับโค้ดทุกบรรทัด")
 table(s, [
@@ -553,9 +524,27 @@ bullets(s, [
     {"t": "Go ไม่มี: built-in map/filter · immutability guarantee · tail-call optimization — รู้ขีดจำกัด แล้วออกแบบรอบมัน", "level": 0, "size": 16},
 ], y=4.55)
 takeaway(s, "ไม่ต้องเขียน FP ทั้งวัน — แค่หมั่นย้าย calculation ออกจาก action ทีละฟังก์ชัน")
-notes(s, "[1:52] ปิดด้วย call to action: สัปดาห์หน้าหยิบ handler ใน service ตัวเองมา 1 ตัว แยก ACD แล้วดึง calculation ออกมา 1 ชิ้น — 15 นาทีก็คุ้ม")
+notes(s, "[1:40] ปิดเนื้อหาด้วยกรอบเดียว: 3 คำถามนี้คือสิ่งที่อยากให้จำกลับบ้าน — การบ้านคือโอกาสฝึกใช้มันหน้าเดียว")
 
-# 17 อ่านต่อ
+# 15 การบ้าน
+s = slide()
+title_bar(s, "การบ้าน: แยกคูปองออกจากการส่งอีเมล",
+          sub="โจทย์จาก Grokking Simplicity บท 3–5 พอร์ตเป็น Go — repo: go-fp/07-coupon-email-exercise (มี EXERCISE.md ประกอบ)")
+code_box(s, CODE_COUPON, 0.6, 2.05, 6.6, 4.5, size=12, label="starter/coupons.go — จุดตั้งต้น", label_color=BAD)
+tb, tf = textbox(s, 7.5, 2.1, 5.3, 4.5)
+put(tf, "โจทย์ของคุณ", size=18, bold=True, color=ACCENT, first=True, space_after=6)
+for i, t in enumerate([
+    "แยก Actions / Calculations / Data ให้ครบ",
+    "ดึง FindApplicableCoupons ออกมา — เขียน table-driven test ก่อน implementation",
+    "เหลือ SendCouponEmail เป็น action บาง ๆ",
+    "ทำเสร็จค่อยเปิดดู solution/ ใน repo",
+]):
+    put(tf, f"{i+1}. {t}", size=15, space_after=8)
+put(tf, "กติกาโจทย์: เงินเป็นบาทเต็มไม่ติดลบ · coupon ไม่มีหมวด = ใช้ได้ทุกหมวด · รักษาลำดับเดิม", size=13, color=MUTED, italic=True)
+takeaway(s, "เป้าหมาย: กติกาธุรกิจทั้งหมดอยู่ใน calculation ที่เทสต์ได้ โดยไม่ต้องแตะ I/O")
+notes(s, "[1:48] มอบการบ้าน: ใช้เวลา ~20 นาที ใบ้จุดพลาดบ่อยไว้ด้วย — (1) ลืมรักษาลำดับคูปองเดิม (2) return slice ใหม่แต่ mutate element ข้างใน (ยังไม่ pure) (3) แอบเอาการหา coupon กลับเข้าไปใน action ครั้งหน้าเปิดเฉลยพร้อมกัน")
+
+# 16 อ่านต่อ
 s = slide()
 title_bar(s, "อ่านต่อ")
 bullets(s, [
