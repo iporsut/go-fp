@@ -10,8 +10,17 @@ type Server struct {
 
 type Option func(*Server)
 
-func WithPort(port int) Option                 { return func(s *Server) { s.Port = port } }
-func WithTimeout(timeout time.Duration) Option { return func(s *Server) { s.Timeout = timeout } }
+func WithPort(port int) Option {
+	return func(s *Server) {
+		s.Port = port
+	}
+}
+
+func WithTimeout(timeout time.Duration) Option {
+	return func(s *Server) {
+		s.Timeout = timeout
+	}
+}
 
 // New สร้างค่าเริ่มต้นก่อนใช้ options ตามลำดับที่รับมา
 func New(host string, opts ...Option) *Server {
@@ -20,4 +29,11 @@ func New(host string, opts ...Option) *Server {
 		opt(s)
 	}
 	return s
+}
+
+func main() {
+	New("localhost",
+		WithTimeout(10*time.Second),
+		WithPort(9090),
+	)
 }

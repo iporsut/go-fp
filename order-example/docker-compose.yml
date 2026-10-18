@@ -1,0 +1,35 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: app
+      POSTGRES_PASSWORD: app
+      POSTGRES_DB: checkout
+    ports: ["5432:5432"]
+    volumes:
+      - ./migrations:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U app -d checkout"]
+      interval: 2s
+      timeout: 3s
+      retries: 20
+  shipping-mock:
+    build: .
+    command: ["shipping-mock"]
+    ports: ["8081:8081"]
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://127.0.0.1:8081/v1/quotes?destination_zip=94107&weight_grams=600"]
+      interval: 2s
+      timeout: 3s
+      retries: 20
+  api:
+    build: .
+    environment:
+      DATABASE_URL: postgres://app:app@postgres:5432/checkout?sslmode=disable
+      SHIPPING_API_URL: http://shipping-mock:8081
+    ports: ["8080:8080"]
+    depends_on:
+      postgres:
+        condition: service_healthy
+      shipping-mock:
+        condition: service_healthy
